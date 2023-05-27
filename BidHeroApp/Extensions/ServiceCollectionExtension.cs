@@ -1,6 +1,8 @@
 ﻿using BidHeroApp.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using BidHeroApp.Services.Contracts;
+using BidHeroApp.Services;
 
 namespace BidHeroApp.Extensions
 {
@@ -26,6 +28,13 @@ namespace BidHeroApp.Extensions
                     }
                 }
             }
+
+            return services;
+        }
+
+        public static IServiceCollection AddAppServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }

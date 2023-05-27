@@ -1,0 +1,48 @@
+﻿@page "/accounts"
+@using BidHeroApp.Services.Contracts;
+@using BidHeroApp.ViewModels;
+@inject IUserService UserService
+
+<PageTitle>Accounts</PageTitle>
+
+<h1>Accounts</h1>
+
+@if (accounts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Given Name</th>
+                <th>Family Name</th>
+                <th>Email</th>
+                <th>Is Admin</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in accounts)
+            {
+                <tr>
+                    <td>@account.Id</td>
+                    <td>@account.GivenName</td>
+                    <td>@account.FamilyName</td>
+                    <td>@account.Email</td>
+                    <td>@account.IsAdmin</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<UserViewModel>? accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = await UserService.ListAsync();
+    }
+}
