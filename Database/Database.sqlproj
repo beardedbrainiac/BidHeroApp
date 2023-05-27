@@ -73,9 +73,8 @@
     <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
     <Build Include="dbo\Views\vwUsers.sql" />
     <Build Include="dbo\Stored Procedures\spToggleAdminRole.sql" />
-    <None Include="PostScripts\PopulateUser.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="PostScripts\PopulateRole.sql" />
+    <PostDeploy Include="PostScripts\PopulateUser.sql" />
   </ItemGroup>
 </Project>
