@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidHeroApp", "BidHeroApp\BidHeroApp.csproj", "{2F306CA3-0B3D-4247-AB39-8F076055D617}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{FD4E4C4A-850D-4588-A6E2-903FD71BA726}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F306CA3-0B3D-4247-AB39-8F076055D617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F306CA3-0B3D-4247-AB39-8F076055D617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F306CA3-0B3D-4247-AB39-8F076055D617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F306CA3-0B3D-4247-AB39-8F076055D617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E089A26-3063-4F34-94BA-B151AFF7E990}
+	EndGlobalSection
+EndGlobal
