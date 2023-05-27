@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using BidHeroApp.Services.Contracts;
 using BidHeroApp.Services;
+using BidHeroApp.Constants;
 
 namespace BidHeroApp.Extensions
 {
@@ -14,7 +15,7 @@ namespace BidHeroApp.Extensions
 
             if (context != null)
             {
-                string[] roles = new string[] { "Owner" ,"Administrator", "User" };
+                string[] roles = new string[] { Role.Owner , Role.Administrator, Role.User };
 
                 foreach (string role in roles)
                 {

@@ -1,8 +1,9 @@
 ﻿@page "/accounts"
+@using BidHeroApp.Constants;
 @using BidHeroApp.Services.Contracts;
 @using BidHeroApp.ViewModels;
 @inject IUserService UserService
-@attribute [Authorize]
+@attribute [Authorize(Roles = Role.Owner)]
 
 <PageTitle>Accounts</PageTitle>
 
