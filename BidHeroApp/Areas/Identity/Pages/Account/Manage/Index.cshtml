@@ -20,6 +20,8 @@
                 <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
                 <label asp-for="Username" class="form-label"></label>
             </div>
+        </div>
+        <div class="col-md-6">
             <div class="form-floating mb-3">
                 <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
@@ -51,16 +53,15 @@
                 <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-md-6">
-            <div class="form-floating mb-3">
+            <div class="form-group">
+                <label>Gender</label>
                 @foreach (Gender gender in System.Enum.GetValues(typeof(Gender)))
                 {
-                    <div class="form-check form-check-inline">
+                    <label class="form-check-label" asp-for="Input.Gender">
                         <input asp-for="Input.Gender" class="form-check-input" type="radio" value="@((int)gender)">
-                        <label class="form-check-label" asp-for="Input.Gender">@gender.ToString()</label>
-                    </div>
+                        @gender.ToString()
+                    </label>
                 }
             </div>
         </div>
