@@ -31,5 +31,17 @@ namespace BidHeroApp.Services
                 throw;
             }
         }
+
+        public async Task ToggleAdminRoleAsync(string userId)
+        {
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"spToggleAdminRole @UserId={userId}");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

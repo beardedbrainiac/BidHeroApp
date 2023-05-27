@@ -1,0 +1,46 @@
+﻿<!-- Modal -->
+<div class="modal fade" id="toggleConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="toggleConfirmationLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="toggleConfirmationLabel">Toggle Confirmation</h5>
+                <button id="toggleConfirmationClose" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="()=>OnConfirmationToggle(false)"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure?
+            </div>
+            @if(IsParentComponentProcessing)
+            {
+                <div class="modal-footer">
+                    <button type="button" disabled class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" disabled class="btn btn-primary">Processing</button>
+                </div>
+            }
+            else
+            {
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="()=>OnConfirmationToggle(false)">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="()=>OnConfirmationToggle(true)">Proceed</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public bool IsParentComponentProcessing { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ConfirmationChanged { get; set; }
+
+    private async Task OnConfirmationToggle(bool value)
+    {
+        if (value)
+        {
+            await ConfirmationChanged.InvokeAsync(value);
+        }
+    }
+
+}

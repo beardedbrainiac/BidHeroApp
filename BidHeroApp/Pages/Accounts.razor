@@ -2,12 +2,16 @@
 @using BidHeroApp.Constants;
 @using BidHeroApp.Services.Contracts;
 @using BidHeroApp.ViewModels;
+@using BidHeroApp.Pages.Shared;
 @inject IUserService UserService
+@inject IJSRuntime JSRuntime
 @attribute [Authorize(Roles = Role.Owner)]
 
 <PageTitle>Accounts</PageTitle>
 
 <h1>Accounts</h1>
+
+<ToggleConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmToggle_Click"></ToggleConfirmation>
 
 @if (accounts == null)
 {
@@ -23,6 +27,7 @@ else
                 <th>Family Name</th>
                 <th>Email</th>
                 <th>Is Admin</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +39,8 @@ else
                     <td>@account.FamilyName</td>
                     <td>@account.Email</td>
                     <td>@account.IsAdmin</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" @onclick="()=>ToggleAdminRole(account.Id.ToString())">Toggle</button></td>
                 </tr>
             }
         </tbody>
@@ -41,10 +48,36 @@ else
 }
 
 @code {
+    public bool IsLoading { get; set; }
     private IList<UserViewModel>? accounts;
+    private string toggleUserId = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadListAsync();
+    }
+
+    private async Task LoadListAsync()
+    {
         accounts = await UserService.ListAsync();
     }
+
+    private void ToggleAdminRole(string userId)
+    {
+        toggleUserId = userId;
+        JSRuntime.InvokeVoidAsync("ShowToggleConfirmationModal");
+    }
+
+    public async Task ConfirmToggle_Click(bool isConfirmed)
+    {
+        IsLoading = true;
+        if (isConfirmed && !string.IsNullOrWhiteSpace(toggleUserId))
+        {
+            await UserService.ToggleAdminRoleAsync(toggleUserId);
+            await LoadListAsync();
+            await JSRuntime.InvokeVoidAsync("HideToggleConfirmationModal");
+        }
+        IsLoading = false;
+    }
+
 }
