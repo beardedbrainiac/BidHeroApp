@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidHeroApp", "BidHeroApp\BidHeroApp.csproj", "{2F306CA3-0B3D-4247-AB39-8F076055D617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidHeroApp", "BidHeroApp\BidHeroApp.csproj", "{2F306CA3-0B3D-4247-AB39-8F076055D617}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{FD4E4C4A-850D-4588-A6E2-903FD71BA726}"
 EndProject
