@@ -27,7 +27,6 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Id</th>
                         <th>Given Name</th>
                         <th>Family Name</th>
                         <th>Email</th>
@@ -39,11 +38,19 @@
                     @foreach (var account in accounts)
                     {
                         <tr>
-                            <td>@account.Id</td>
                             <td>@account.GivenName</td>
                             <td>@account.FamilyName</td>
                             <td>@account.Email</td>
-                            <td>@account.IsAdmin</td>
+                            <td>
+                                @if(account.IsAdmin)
+                                {
+                                    <div class="display-6 text-success"><i class="bi bi-check-circle-fill"></i></div>
+                                }
+                                else
+                                {
+                                    <div class="display-6 text-mutted"><i class="bi bi-check-circle"></i></div>
+                                }
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-primary" @onclick="()=>ToggleAdminRole(account.Id.ToString())">Toggle</button>
                             </td>
