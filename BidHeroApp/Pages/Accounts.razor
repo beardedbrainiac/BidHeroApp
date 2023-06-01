@@ -7,10 +7,7 @@
 @inject IJSRuntime JSRuntime
 @*@attribute [Authorize(Roles = Role.Owner)]*@
 
-<AuthorizeView Roles="@Role.Owner">
-    <NotAuthorized>
-        <Forbidden></Forbidden>
-    </NotAuthorized>
+<AuthorizeView Roles="@Role.Owner" Context="innerContext">
     <Authorized>
         <PageTitle>Accounts</PageTitle>
 
@@ -42,7 +39,7 @@
                             <td>@account.FamilyName</td>
                             <td>@account.Email</td>
                             <td>
-                                @if(account.IsAdmin)
+                                @if (account.IsAdmin)
                                 {
                                     <div class="display-6 text-success"><i class="bi bi-check-circle-fill"></i></div>
                                 }
@@ -60,6 +57,16 @@
             </table>
         }
     </Authorized>
+    <NotAuthorized>
+        <AuthorizeView>
+            <Authorized>
+                <Forbidden></Forbidden>
+            </Authorized>
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeView>        
+    </NotAuthorized>
 </AuthorizeView>
 
 @code {
