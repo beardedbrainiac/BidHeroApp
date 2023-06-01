@@ -5,47 +5,55 @@
 @using BidHeroApp.Pages.Shared;
 @inject IUserService UserService
 @inject IJSRuntime JSRuntime
-@attribute [Authorize(Roles = Role.Owner)]
+@*@attribute [Authorize(Roles = Role.Owner)]*@
 
-<PageTitle>Accounts</PageTitle>
+<AuthorizeView Roles="@Role.Owner">
+    <NotAuthorized>
+        <Forbidden></Forbidden>
+    </NotAuthorized>
+    <Authorized>
+        <PageTitle>Accounts</PageTitle>
 
-<h1>Accounts</h1>
+        <h1>Accounts</h1>
 
-<ToggleConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmToggle_Click"></ToggleConfirmation>
+        <ToggleConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmToggle_Click"></ToggleConfirmation>
 
-@if (accounts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Given Name</th>
-                <th>Family Name</th>
-                <th>Email</th>
-                <th>Is Admin</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var account in accounts)
-            {
-                <tr>
-                    <td>@account.Id</td>
-                    <td>@account.GivenName</td>
-                    <td>@account.FamilyName</td>
-                    <td>@account.Email</td>
-                    <td>@account.IsAdmin</td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-primary" @onclick="()=>ToggleAdminRole(account.Id.ToString())">Toggle</button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        @if (accounts == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Given Name</th>
+                        <th>Family Name</th>
+                        <th>Email</th>
+                        <th>Is Admin</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var account in accounts)
+                    {
+                        <tr>
+                            <td>@account.Id</td>
+                            <td>@account.GivenName</td>
+                            <td>@account.FamilyName</td>
+                            <td>@account.Email</td>
+                            <td>@account.IsAdmin</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" @onclick="()=>ToggleAdminRole(account.Id.ToString())">Toggle</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </Authorized>
+</AuthorizeView>
 
 @code {
     public bool IsLoading { get; set; }

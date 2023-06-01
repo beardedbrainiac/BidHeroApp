@@ -1,8 +1,28 @@
+// not working
+//const container = document.getElementById("toggleConfirmation");
+//const modal = new bootstrap.Modal(container);
+
 function ShowToggleConfirmationModal() {
-    var toggleConfirmationModal = new bootstrap.Modal(document.getElementById('toggleConfirmation'));
-    toggleConfirmationModal.show();
+    $('#toggleConfirmation').modal('show');
+
+    // working
+    //var toggleConfirmationModal = new bootstrap.Modal(document.getElementById('toggleConfirmation'));
+    //toggleConfirmationModal.show();
+
+    // not working
+    //this.modal.show();
 }
 
 function HideToggleConfirmationModal() {
-    document.getElementById('toggleConfirmationClose').click();
+    $('#toggleConfirmation').modal('hide');
+
+    // not working
+    //var toggleConfirmationModal = new bootstrap.Modal(document.getElementById('toggleConfirmation'));
+    //toggleConfirmationModal.hide();
+
+    // not working
+    //this.modal.hide();
+
+    // working
+    //document.getElementById('toggleConfirmationClose').click();
 }
