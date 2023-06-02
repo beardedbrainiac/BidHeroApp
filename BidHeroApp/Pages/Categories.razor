@@ -1,0 +1,113 @@
+﻿@page "/categories"
+@using BidHeroApp.Constants;
+@using BidHeroApp.Services.Contracts;
+@using BidHeroApp.ViewModels;
+@using BidHeroApp.InputModels;
+@using BidHeroApp.Pages.Shared;
+@using System.Security.Claims;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ICategoryService CategoryService
+@inject IJSRuntime JSRuntime
+
+<AuthorizeView Roles="@Role.Administrator" Context="innerContext">
+    <Authorized>
+        <PageTitle>Categories</PageTitle>
+
+        <h1>Categories</h1>
+
+        <DeleteConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></DeleteConfirmation>
+
+        @if (categories == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Is Active</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in categories)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td>
+                                @if (category.IsActive)
+                                {
+                                    <div class="display-6 text-success"><i class="bi bi-check-circle-fill"></i></div>
+                                }
+                                else
+                                {
+                                    <div class="display-6 text-mutted"><i class="bi bi-check-circle"></i></div>
+                                }
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="()=>Delete(category.Id)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <AuthorizeView>
+            <Authorized>
+                <Forbidden></Forbidden>
+            </Authorized>
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeView>        
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    public bool IsLoading { get; set; }
+    private IList<CategoryViewModel>? categories;
+    private int _categoryId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadListAsync();
+    }
+
+    private async Task LoadListAsync()
+    {
+        categories = await CategoryService.ListAsync();
+    }
+
+    private void Delete(int categoryId)
+    {
+        _categoryId = categoryId;
+        JSRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+    }
+
+    public async Task ConfirmDelete_Click(bool isConfirmed)
+    {
+        IsLoading = true;
+        if (isConfirmed && _categoryId > 0)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var deleteModel = new DeleteInputModel()
+            {
+                Id = _categoryId
+            };
+            deleteModel.SetUserId(userId);
+
+            await CategoryService.DeleteAsync(deleteModel);
+            await LoadListAsync();
+            await JSRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+        }
+        IsLoading = false;
+    }
+
+}

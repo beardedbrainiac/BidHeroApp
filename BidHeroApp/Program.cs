@@ -26,6 +26,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.InitializeDatabase();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddValidators();
 builder.Services.AddAppServices();
 
 var app = builder.Build();

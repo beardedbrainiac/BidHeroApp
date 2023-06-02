@@ -26,3 +26,11 @@ function HideToggleConfirmationModal() {
     // working
     //document.getElementById('toggleConfirmationClose').click();
 }
+
+function ShowDeleteConfirmationModal() {
+    $('#deleteConfirmation').modal('show');
+}
+
+function HideDeleteConfirmationModal() {
+    $('#deleteConfirmation').modal('hide');
+}
