@@ -6,7 +6,7 @@ using BidHeroApp.Models.Enums;
 
 namespace BidHeroApp.Models
 {
-    public class ApplicationUser : IdentityUser
+    public partial class ApplicationUser : IdentityUser
     {
         [StringLength(100)]
         public string? GivenName { get; set; }

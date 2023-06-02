@@ -1,0 +1,1 @@
+Scaffold-DbContext 'Server=localhost;Database=BidHeroApp;Trusted_Connection=True;MultipleActiveResultSets=True;Encrypt=False' Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

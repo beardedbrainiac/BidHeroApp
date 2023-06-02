@@ -24,3 +24,15 @@ IF NOT EXISTS (SELECT 1 FROM [dbo].[AspNetUsers] WHERE [Email] = 'cabalfinelmor1
         INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'8ad9f390-0767-4109-aa82-b8d55fb0d22f', N'3064fc34-ba70-4390-9451-b26260a1614b');
         INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'8ad9f390-0767-4109-aa82-b8d55fb0d22f', N'61817a28-9bf7-4dca-97b9-9044bf6cdb79');
     END
+IF NOT EXISTS (SELECT 1 FROM [dbo].[AspNetUsers] WHERE [Email] = 'admin@email.com')
+    BEGIN
+        INSERT [dbo].[AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [GivenName], [FamilyName], [Gender], [BirthDate]) VALUES (N'25b84c8e-a2a1-439a-9815-1a2e092d03dd', N'admin@email.com', N'ADMIN@EMAIL.COM', N'admin@email.com', N'ADMIN@EMAIL.COM', 1, N'AQAAAAIAAYagAAAAEKxTePMPxuOueoYU9gNs50yBu0fBeiGyRhhRYsB3QtOCHFpaWDIi49Iy+qgI9ZLrwQ==', N'RFPZRMLBHL6M4YV2YTWV3F56YLHTOY42', N'6565c7a0-a7c3-4a4a-9f67-f50baf39b47b', NULL, 0, 0, NULL, 1, 0, N'Elmor', N'Cabalfin', 1, CAST(N'1992-05-17' AS Date))
+        INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'25b84c8e-a2a1-439a-9815-1a2e092d03dd', N'527297e4-45e3-41b3-b3a0-9b2802d5448c')
+        INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'25b84c8e-a2a1-439a-9815-1a2e092d03dd', N'61817a28-9bf7-4dca-97b9-9044bf6cdb79')
+    END
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Category] WHERE [Name] IN ('Electronics'))
+    BEGIN
+        SET IDENTITY_INSERT [dbo].[Category] ON
+        INSERT [dbo].[Category] ([Id], [Name], [IsActive], [IsDeleted], [CreatedByUserId], [CreatedDate], [UpdatedByUserId], [UpdatedDate], [DeletedByUserId], [DeletedDate]) VALUES (1, N'Electronics', 1, 0, N'25b84c8e-a2a1-439a-9815-1a2e092d03dd', CAST(N'2023-06-02T09:25:08.5933333+00:00' AS DateTimeOffset), NULL, NULL, NULL, NULL)
+        SET IDENTITY_INSERT [dbo].[Category] OFF
+    END

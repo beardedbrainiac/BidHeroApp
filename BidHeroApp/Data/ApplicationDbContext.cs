@@ -17,8 +17,20 @@ namespace BidHeroApp.Data
         {
             base.OnModelCreating(builder);
 
+            // Entities
+
+            builder.ApplyConfiguration(new CategoryConfiguration());
+
+            // Views
+
             builder.ApplyConfiguration(new VwUserConfiguration());
         }
+
+        // Entities
+
+        public virtual DbSet<Category> Categories { get; set; }
+
+        // Views
 
         public virtual DbSet<VwUser> VwUsers { get; set; }
     }

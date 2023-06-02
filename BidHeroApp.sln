@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidHeroApp", "BidHeroApp\Bi
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{FD4E4C4A-850D-4588-A6E2-903FD71BA726}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseTest", "DatabaseTest\DatabaseTest.csproj", "{FCA998CC-C1DE-45B0-82D4-2DB3B8A32623}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD4E4C4A-850D-4588-A6E2-903FD71BA726}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FCA998CC-C1DE-45B0-82D4-2DB3B8A32623}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA998CC-C1DE-45B0-82D4-2DB3B8A32623}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCA998CC-C1DE-45B0-82D4-2DB3B8A32623}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA998CC-C1DE-45B0-82D4-2DB3B8A32623}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
