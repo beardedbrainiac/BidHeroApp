@@ -12,6 +12,14 @@ Post-Deployment Script Template
 
 USE [BidHeroApp]
 GO
+IF NOT EXISTS (SELECT 1 FROM [dbo].[__EFMigrationsHistory] WHERE [MigrationId] IN ('00000000000000_CreateIdentitySchema'))
+    BEGIN
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'00000000000000_CreateIdentitySchema', N'3.0.0')
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230527034334_UpdateUser', N'7.0.5')
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230527041624_CreateVwUser', N'7.0.5')
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230527043231_CreateSpToggleAdminRole', N'7.0.5')
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230602094943_CreateCategory', N'7.0.5')
+    END
 IF NOT EXISTS (SELECT 1 FROM [dbo].[AspNetRoles] WHERE [Name] IN ('Owner', 'Administrator', 'User'))
     BEGIN
         INSERT [dbo].[AspNetRoles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'3064fc34-ba70-4390-9451-b26260a1614b', N'Owner', N'OWNER', NULL);
