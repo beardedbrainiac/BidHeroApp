@@ -15,6 +15,8 @@
 
         <h1>Categories</h1>
 
+        <AddCategory IsParentComponentProcessing="IsLoading" Callback="AddCategory_Click"></AddCategory>
+        <UpdateCategory IsParentComponentProcessing="IsLoading" Input="Input" Callback="UpdateCategory_Click"></UpdateCategory>
         <DeleteConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></DeleteConfirmation>
 
         @if (categories == null)
@@ -47,6 +49,7 @@
                                 }
                             </td>
                             <td>
+                                <button type="button" class="btn btn-sm btn-warning" @onclick="()=>Update(category)">Update</button>
                                 <button type="button" class="btn btn-sm btn-danger" @onclick="()=>Delete(category.Id)">Delete</button>
                             </td>
                         </tr>
@@ -68,7 +71,8 @@
 </AuthorizeView>
 
 @code {
-    public bool IsLoading { get; set; }
+    public bool IsLoading { get; set; } = false;
+    public CategoryInputModel Input { get; set; } = new();
     private IList<CategoryViewModel>? categories;
     private int _categoryId = 0;
 
@@ -80,6 +84,60 @@
     private async Task LoadListAsync()
     {
         categories = await CategoryService.ListAsync();
+    }
+
+
+    private void Add()
+    {
+        Input = new CategoryInputModel();
+        JSRuntime.InvokeVoidAsync("ShowAddCategoryModal");
+    }
+
+    public async Task AddCategory_Click(CategoryInputModel addModel)
+    {
+        IsLoading = true;
+        if (addModel != null)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            addModel.SetUserId(userId);
+
+            await CategoryService.AddAsync(addModel);
+            await LoadListAsync();
+            await JSRuntime.InvokeVoidAsync("HideAddCategoryModal");
+        }
+        IsLoading = false;
+    }
+
+    private void Update(CategoryViewModel model)
+    {
+        Input = new CategoryInputModel()
+        {
+            Id = model.Id,
+            Name = model.Name,
+            IsActive = model.IsActive
+        };
+        JSRuntime.InvokeVoidAsync("ShowUpdateCategoryModal");
+    }
+
+    public async Task UpdateCategory_Click(CategoryInputModel updateModel)
+    {
+        IsLoading = true;
+        if (updateModel != null)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            updateModel.SetUserId(userId);
+
+            await CategoryService.UpdateAsync(updateModel);
+            await LoadListAsync();
+            await JSRuntime.InvokeVoidAsync("HideUpdateCategoryModal");
+        }
+        IsLoading = false;
     }
 
     private void Delete(int categoryId)

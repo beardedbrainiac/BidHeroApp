@@ -34,3 +34,19 @@ function ShowDeleteConfirmationModal() {
 function HideDeleteConfirmationModal() {
     $('#deleteConfirmation').modal('hide');
 }
+
+function ShowAddCategoryModal() {
+    $('#addCategory').modal('show');
+}
+
+function HideAddCategoryModal() {
+    $('#addCategory').modal('hide');
+}
+
+function ShowUpdateCategoryModal() {
+    $('#updateCategory').modal('show');
+}
+
+function HideUpdateCategoryModal() {
+    $('#updateCategory').modal('hide');
+}
