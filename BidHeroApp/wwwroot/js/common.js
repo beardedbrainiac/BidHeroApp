@@ -1,3 +1,7 @@
+function DisplayErrorMessage(message) {
+    toastr.error(message, 'Failure!');
+}
+
 // not working
 //const container = document.getElementById("toggleConfirmation");
 //const modal = new bootstrap.Modal(container);

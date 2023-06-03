@@ -93,11 +93,18 @@
     public async Task ConfirmToggle_Click(bool isConfirmed)
     {
         IsLoading = true;
-        if (isConfirmed && !string.IsNullOrWhiteSpace(toggleUserId))
+        try
         {
-            await UserService.ToggleAdminRoleAsync(toggleUserId);
-            await LoadListAsync();
-            await JSRuntime.InvokeVoidAsync("HideToggleConfirmationModal");
+            if (isConfirmed && !string.IsNullOrWhiteSpace(toggleUserId))
+            {
+                await UserService.ToggleAdminRoleAsync(toggleUserId);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideToggleConfirmationModal");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
         }
         IsLoading = false;
     }

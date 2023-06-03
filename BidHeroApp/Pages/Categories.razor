@@ -99,17 +99,24 @@
     public async Task AddCategory_Click(CategoryInputModel addModel)
     {
         IsLoading = true;
-        if (addModel != null)
+        try
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-            string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (addModel != null)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            addModel.SetUserId(userId);
+                addModel.SetUserId(userId);
 
-            await CategoryService.AddAsync(addModel);
-            await LoadListAsync();
-            await JSRuntime.InvokeVoidAsync("HideAddCategoryModal");
+                await CategoryService.AddAsync(addModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideAddCategoryModal");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
         }
         IsLoading = false;
     }
@@ -128,17 +135,24 @@
     public async Task UpdateCategory_Click(CategoryInputModel updateModel)
     {
         IsLoading = true;
-        if (updateModel != null)
+        try
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-            string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (updateModel != null)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            updateModel.SetUserId(userId);
+                updateModel.SetUserId(userId);
 
-            await CategoryService.UpdateAsync(updateModel);
-            await LoadListAsync();
-            await JSRuntime.InvokeVoidAsync("HideUpdateCategoryModal");
+                await CategoryService.UpdateAsync(updateModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideUpdateCategoryModal");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
         }
         IsLoading = false;
     }
@@ -152,21 +166,28 @@
     public async Task ConfirmDelete_Click(bool isConfirmed)
     {
         IsLoading = true;
-        if (isConfirmed && _categoryId > 0)
+        try
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-            string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            var deleteModel = new DeleteInputModel()
+            if (isConfirmed && _categoryId > 0)
             {
-                Id = _categoryId
-            };
-            deleteModel.SetUserId(userId);
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            await CategoryService.DeleteAsync(deleteModel);
-            await LoadListAsync();
-            await JSRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+                var deleteModel = new DeleteInputModel()
+                    {
+                        Id = _categoryId
+                    };
+                deleteModel.SetUserId(userId);
+
+                await CategoryService.DeleteAsync(deleteModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+            }
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
         }
         IsLoading = false;
     }
