@@ -25,6 +25,8 @@ function HideToggleConfirmationModal() {
 
     // working
     //document.getElementById('toggleConfirmationClose').click();
+
+    toastr.success('Successful toggling!');
 }
 
 function ShowDeleteConfirmationModal() {
@@ -33,6 +35,8 @@ function ShowDeleteConfirmationModal() {
 
 function HideDeleteConfirmationModal() {
     $('#deleteConfirmation').modal('hide');
+
+    toastr.success('Successful deleting!');
 }
 
 function ShowAddCategoryModal() {
@@ -41,6 +45,8 @@ function ShowAddCategoryModal() {
 
 function HideAddCategoryModal() {
     $('#addCategory').modal('hide');
+
+    toastr.success('Successful adding category!');
 }
 
 function ShowUpdateCategoryModal() {
@@ -49,4 +55,6 @@ function ShowUpdateCategoryModal() {
 
 function HideUpdateCategoryModal() {
     $('#updateCategory').modal('hide');
+
+    toastr.success('Successful updating category!');
 }
