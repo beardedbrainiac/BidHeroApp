@@ -20,6 +20,7 @@ namespace BidHeroApp.Data
             // Entities
 
             builder.ApplyConfiguration(new CategoryConfiguration());
+            builder.ApplyConfiguration(new ItemConfiguration());
 
             // Views
 
@@ -29,6 +30,7 @@ namespace BidHeroApp.Data
         // Entities
 
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
 
         // Views
 
