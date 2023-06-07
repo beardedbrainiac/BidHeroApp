@@ -41,6 +41,7 @@ namespace BidHeroApp.Extensions
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IItemService, ItemService>();
 
             return services;
         }
@@ -48,6 +49,8 @@ namespace BidHeroApp.Extensions
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
             services.AddScoped<IValidator<CategoryInputModel>, CategoryInputModelValidator>();
+            services.AddScoped<IValidator<ItemInputModel>, ItemInputModelValidator>();
+            services.AddScoped<IValidator<ItemsInputModel>, ItemsInputModelValidator>();
 
             return services;
         }
