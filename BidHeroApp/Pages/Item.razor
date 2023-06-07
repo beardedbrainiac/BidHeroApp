@@ -1,0 +1,246 @@
+﻿@page "/items"
+@using BidHeroApp.Constants;
+@using BidHeroApp.Services.Contracts;
+@using BidHeroApp.ViewModels;
+@using BidHeroApp.InputModels;
+@using BidHeroApp.Components.Item;
+@using BidHeroApp.Components;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IItemService ItemService
+@inject ICategoryService CategoryService
+@inject IJSRuntime JSRuntime
+
+<AuthorizeView Roles="@Role.Administrator" Context="innerContext">
+    <Authorized>
+        <PageTitle>Categories</PageTitle>
+
+        <h1>Categories</h1>
+
+        <AddItem IsParentComponentProcessing="IsLoading" Categories="categories" Callback="AddItem_Click"></AddItem>
+        <AddItems IsParentComponentProcessing="IsLoading" Categories="categories" Callback="AddItems_Click"></AddItems>
+        <UpdateItem IsParentComponentProcessing="IsLoading" Categories="categories" Input="Input" Callback="UpdateItem_Click"></UpdateItem>
+        <DeleteConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></DeleteConfirmation>
+
+        @if (items == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <button type="button" class="btn btn-sm btn-success" @onclick="()=>Add()">Add</button>
+            <button type="button" class="btn btn-sm btn-success" @onclick="()=>AddRange()">Add Items</button>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Is Active</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Code</td>
+                            <td>@item.StartDate</td>
+                            <td>@item.EndDate</td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <div class="display-6 text-success"><i class="bi bi-check-circle-fill"></i></div>
+                                }
+                                else
+                                {
+                                    <div class="display-6 text-mutted"><i class="bi bi-check-circle"></i></div>
+                                }
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning" @onclick="()=>Update(item)">Update</button>
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="()=>Delete(item.Id)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <AuthorizeView>
+            <Authorized>
+                <Forbidden></Forbidden>
+            </Authorized>
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeView>        
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    public bool IsLoading { get; set; } = false;
+    public ItemInputModel Input { get; set; } = new();
+    public ItemsInputModel Inputs { get; set; } = new();
+    private IList<ItemViewModel>? items;
+    private IList<SelectListItem>? categories;
+    private int _itemId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        await LoadListAsync();
+
+        categories = await CategoryService.AsSelectListAsync();
+        IsLoading = false;
+    }
+
+    private async Task LoadListAsync()
+    {
+        items = await ItemService.ListAsync();
+    }
+
+
+    private void Add()
+    {
+        Input = new ItemInputModel();
+        JSRuntime.InvokeVoidAsync("ShowAddItemModal");
+    }
+
+    public async Task AddItem_Click(ItemInputModel addModel)
+    {
+        IsLoading = true;
+        try
+        {
+            if (addModel != null)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                addModel.SetUserId(userId);
+
+                await ItemService.AddAsync(addModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideAddItemModal");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
+        }
+        IsLoading = false;
+    }
+
+    private void AddRange()
+    {
+        Inputs = new ItemsInputModel();
+        JSRuntime.InvokeVoidAsync("ShowAddItemsModal");
+    }
+
+    public async Task AddItems_Click(ItemsInputModel addModel)
+    {
+        IsLoading = true;
+        try
+        {
+            if (addModel != null)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                addModel.SetUserId(userId);
+
+                await ItemService.AddRangeAsync(addModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideAddItemsModal");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
+        }
+        IsLoading = false;
+    }
+
+    private void Update(ItemViewModel model)
+    {
+        Input = new ItemInputModel()
+        {
+            Id = model.Id,
+            Name = model.Name,
+            Code = model.Code,
+            Category = int.Parse(model.Category.Value),
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
+            IsActive = model.IsActive
+        };
+        JSRuntime.InvokeVoidAsync("ShowUpdateItemModal");
+    }
+
+    public async Task UpdateItem_Click(ItemInputModel updateModel)
+    {
+        IsLoading = true;
+        try
+        {
+            if (updateModel != null)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                updateModel.SetUserId(userId);
+
+                await ItemService.UpdateAsync(updateModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideUpdateItemModal");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
+        }
+        IsLoading = false;
+    }
+
+    private void Delete(int itemId)
+    {
+        _itemId = itemId;
+        JSRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+    }
+
+    public async Task ConfirmDelete_Click(bool isConfirmed)
+    {
+        IsLoading = true;
+        try
+        {
+            if (isConfirmed && _itemId > 0)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                var deleteModel = new DeleteInputModel()
+                    {
+                        Id = _itemId
+                    };
+                deleteModel.SetUserId(userId);
+
+                await ItemService.DeleteAsync(deleteModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+            }
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
+        }
+        IsLoading = false;
+    }
+
+}

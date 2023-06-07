@@ -25,7 +25,8 @@ namespace BidHeroApp.Validators
                 .NotNull();
 
             RuleFor(x => x.Category)
-                .NotNull();
+                .NotNull()
+                .GreaterThanOrEqualTo(1);
         }
     }
 }

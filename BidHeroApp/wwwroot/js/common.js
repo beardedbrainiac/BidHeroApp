@@ -62,3 +62,33 @@ function HideUpdateCategoryModal() {
 
     toastr.success('Successful updating category!');
 }
+
+function ShowAddItemModal() {
+    $('#addItem').modal('show');
+}
+
+function HideAddItemModal() {
+    $('#addItem').modal('hide');
+
+    toastr.success('Successful adding item!');
+}
+
+function ShowAddItemsModal() {
+    $('#addItems').modal('show');
+}
+
+function HideAddItemsModal() {
+    $('#addItems').modal('hide');
+
+    toastr.success('Successful adding items!');
+}
+
+function ShowUpdateItemModal() {
+    $('#updateItem').modal('show');
+}
+
+function HideUpdateItemModal() {
+    $('#updateItem').modal('hide');
+
+    toastr.success('Successful updating item!');
+}

@@ -1,0 +1,102 @@
+﻿@using Blazored.FluentValidation;
+@using BidHeroApp.InputModels;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+
+@if (Categories != null)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="updateItem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateItemLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateItemLabel">Update Item</h5>
+                    <button id="updateItemClose" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="()=>OnReset()"></button>
+                </div>
+                <EditForm Model="@Input" OnSubmit="@OnSave">
+                    <div class="modal-body">
+                        <FluentValidationValidator @ref="_fluentValidationValidator" />
+                        <ValidationSummary />
+
+                        <input type="hidden" id="idInput" class="form-control" @bind="Input.Id">
+                        <div class="mb-3">
+                            <label for="nameInput" class="form-label">Name</label>
+                            <InputText @bind-Value="@Input.Name" class="form-control" placeholder="Please enter name." />
+                        </div>
+                        <div class="mb-3">
+                            <label for="codeInput" class="form-label">Code</label>
+                            <InputText @bind-Value="@Input.Code" class="form-control" placeholder="Please enter code." />
+                        </div>
+                        <div class="mb-3">
+                            <label for="startDateInput" class="form-label">Start Date</label>
+                            <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="@Input.StartDate" class="form-control" placeholder="Please enter start date." />
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDateInput" class="form-label">End Date</label>
+                            <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="@Input.EndDate" class="form-control" placeholder="Please enter end date." />
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <InputCheckbox @bind-Value="@Input.IsActive" class="form-check-input" />
+                                <label class="form-check-label" for="isActiveCheck">Is Active</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoryInput" class="form-label">Category</label>
+                            <InputSelect @bind-Value="@Input.Category" class="form-control" placeholder="Please enter category.">
+                                @foreach (var category in Categories)
+                                {
+                                    <option value="@category.Value">@category.Text</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    @if (IsParentComponentProcessing)
+                    {
+                        <div class="modal-footer">
+                            <button type="button" disabled class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" disabled class="btn btn-primary">Processing</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="()=>OnReset()">Close</button>
+                            <button type="button" class="btn btn-primary" @onclick="()=>OnSave()">Save</button>
+                        </div>
+                    }
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code
+{
+    private FluentValidationValidator? _fluentValidationValidator;
+
+    [Parameter]
+    public ItemInputModel Input { get; set; } = new();
+
+    [Parameter]
+    public bool IsParentComponentProcessing { get; set; }
+
+    [Parameter]
+    public EventCallback<ItemInputModel> Callback { get; set; }
+
+    [Parameter]
+    public IList<SelectListItem> Categories { get; set; }
+
+    private async Task OnSave()
+    {
+        if (await _fluentValidationValidator!.ValidateAsync())
+        {
+            await Callback.InvokeAsync(Input);
+        }
+    }
+
+    private void OnReset()
+    {
+        Input = new();
+    }
+
+}

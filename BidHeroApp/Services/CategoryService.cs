@@ -5,6 +5,7 @@ using BidHeroApp.InputModels;
 using BidHeroApp.Models;
 using BidHeroApp.Services.Contracts;
 using BidHeroApp.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BidHeroApp.Services
@@ -20,6 +21,20 @@ namespace BidHeroApp.Services
         {
             _mapper = mapper;
             _context = context;
+        }
+
+        public async Task<IList<SelectListItem>> AsSelectListAsync()
+        {
+            try
+            {
+                var categories = await _context.Categories.Where(x => !x.IsDeleted).ToListAsync();
+
+                return _mapper.Map<List<SelectListItem>>(categories);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<IList<CategoryViewModel>> ListAsync()

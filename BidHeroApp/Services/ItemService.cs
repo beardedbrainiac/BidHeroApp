@@ -26,7 +26,9 @@ namespace BidHeroApp.Services
         {
             try
             {
-                var items = await _context.Items.Where(x => !x.IsDeleted).ToListAsync();
+                var items = await _context.Items
+                    .Include(x => x.Category)
+                    .Where(x => !x.IsDeleted).ToListAsync();
 
                 return _mapper.Map<List<ItemViewModel>>(items);
             }
@@ -40,7 +42,7 @@ namespace BidHeroApp.Services
         {
             try
             {
-                int categoryId = int.Parse(model.Category.Value);
+                int categoryId = model.Category;
 
                 var category = await _context.Categories.Where(x => x.Id == categoryId).FirstOrDefaultAsync();
                 if (category == null)
@@ -80,7 +82,7 @@ namespace BidHeroApp.Services
                 if (model.Quantity > 0)
                 {
                     string batchCode = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    int categoryId = int.Parse(model.Category.Value);
+                    int categoryId = model.Category;
 
                     var category = await _context.Categories.Where(x => x.Id == categoryId).FirstOrDefaultAsync();
                     if (category == null)
@@ -90,7 +92,7 @@ namespace BidHeroApp.Services
 
                     for (int i = 0; i < model.Quantity; i++)
                     {
-                        string itemCode = $"{batchCode}{i.ToString("D3")}";
+                        string itemCode = $"{batchCode}{(i + 1).ToString("D3")}";
 
                         var itemObject = new Item()
                         {
@@ -126,9 +128,12 @@ namespace BidHeroApp.Services
         {
             try
             {
-                int categoryId = int.Parse(model.Category.Value);
+                int categoryId = model.Category;
 
-                var item = await _context.Items.Where(x => x.Id == model.Id && !x.IsDeleted).FirstOrDefaultAsync();
+                var item = await _context.Items
+                    .Include(x => x.Category)
+                    .Where(x => x.Id == model.Id && !x.IsDeleted)
+                    .FirstOrDefaultAsync();
 
                 if (item != null)
                 {
@@ -168,7 +173,10 @@ namespace BidHeroApp.Services
         {
             try
             {
-                var item = await _context.Items.Where(x => x.Id == model.Id && !x.IsDeleted).FirstOrDefaultAsync();
+                var item = await _context.Items
+                    .Include(x => x.Category)
+                    .Where(x => x.Id == model.Id && !x.IsDeleted)
+                    .FirstOrDefaultAsync();
 
                 if (item != null)
                 {

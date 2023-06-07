@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BidHeroApp.InputModels
 {
@@ -8,8 +8,13 @@ namespace BidHeroApp.InputModels
         public string Name { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public string Code { get; set; } = string.Empty;
-        public DateTimeOffset StartDate { get; set; }
-        public DateTimeOffset EndDate { get; set; }
-        public SelectListItem Category { get; set; } = null!;
+
+        [DataType(DataType.Date)]
+        public DateTimeOffset StartDate { get; set; } = DateTimeOffset.Now;
+
+        [DataType(DataType.Date)]
+        public DateTimeOffset EndDate { get; set; } = DateTimeOffset.Now;
+
+        public int Category { get; set; }
     }
 }
