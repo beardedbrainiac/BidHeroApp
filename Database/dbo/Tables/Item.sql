@@ -13,12 +13,15 @@
     [UpdatedDate]     DATETIMEOFFSET (7) NULL,
     [DeletedByUserId] NVARCHAR (450)     NULL,
     [DeletedDate]     DATETIMEOFFSET (7) NULL,
+    [Image]           NVARCHAR (255)     NULL,
     CONSTRAINT [PK_Item] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Item_Category] FOREIGN KEY ([CategoryId]) REFERENCES [dbo].[Category] ([Id]),
     CONSTRAINT [FK_Item_CreatedByUser] FOREIGN KEY ([CreatedByUserId]) REFERENCES [dbo].[AspNetUsers] ([Id]),
     CONSTRAINT [FK_Item_DeletedByUser] FOREIGN KEY ([DeletedByUserId]) REFERENCES [dbo].[AspNetUsers] ([Id]),
     CONSTRAINT [FK_Item_UpdatedByUser] FOREIGN KEY ([UpdatedByUserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
 );
+
+
 
 
 GO

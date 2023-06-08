@@ -14,6 +14,7 @@ namespace BidHeroApp.Data.Configurations
             builder.Property(e => e.CreatedByUserId).HasMaxLength(450);
             builder.Property(e => e.CreatedDate).HasDefaultValueSql("(getutcdate())");
             builder.Property(e => e.DeletedByUserId).HasMaxLength(450);
+            builder.Property(e => e.Image).IsRequired(false).HasMaxLength(255);
             builder.Property(e => e.IsActive)
                 .IsRequired()
                 .HasDefaultValueSql("((1))");

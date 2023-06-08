@@ -24,4 +24,8 @@
     <ProjectReference Include="..\DatabaseTest\DatabaseTest.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\items\" />
+  </ItemGroup>
+
 </Project>
