@@ -27,6 +27,9 @@ namespace BidHeroApp.Validators
             RuleFor(x => x.Category)
                 .NotNull()
                 .GreaterThanOrEqualTo(1);
+
+            RuleFor(x => x.Image)
+                .NotNull();
         }
     }
 }

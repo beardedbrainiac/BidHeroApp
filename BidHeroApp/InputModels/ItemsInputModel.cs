@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
 
 namespace BidHeroApp.InputModels
@@ -6,6 +6,7 @@ namespace BidHeroApp.InputModels
     public class ItemsInputModel : BaseInputModel
     {
         public string Name { get; set; } = string.Empty;
+        public IBrowserFile Image { get; set; }
         public bool IsActive { get; set; } = true;
         public int Quantity { get; set; } = 1;
 

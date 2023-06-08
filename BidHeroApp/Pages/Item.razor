@@ -14,9 +14,9 @@
 
 <AuthorizeView Roles="@Role.Administrator" Context="innerContext">
     <Authorized>
-        <PageTitle>Categories</PageTitle>
+        <PageTitle>Items</PageTitle>
 
-        <h1>Categories</h1>
+        <h1>Items</h1>
 
         <AddItem IsParentComponentProcessing="IsLoading" Categories="categories" Callback="AddItem_Click"></AddItem>
         <AddItems IsParentComponentProcessing="IsLoading" Categories="categories" Callback="AddItems_Click"></AddItems>
@@ -37,6 +37,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Code</th>
+                        <th>Image</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Is Active</th>
@@ -49,6 +50,9 @@
                         <tr>
                             <td>@item.Name</td>
                             <td>@item.Code</td>
+                            <td>
+                                <img src="\@item.Image" alt="@item.Name" class="img-thumbnail" />
+                            </td>
                             <td>@item.StartDate</td>
                             <td>@item.EndDate</td>
                             <td>

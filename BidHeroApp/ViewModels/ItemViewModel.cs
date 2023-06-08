@@ -9,6 +9,7 @@ namespace BidHeroApp.ViewModels
         public string Name { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public string Code { get; set; } = string.Empty;
+        public string Image { get; set; } = string.Empty;
 
         [DataType(DataType.Date)]
         public DateTimeOffset StartDate { get; set; }

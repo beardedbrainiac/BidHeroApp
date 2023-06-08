@@ -1,6 +1,8 @@
 ﻿@using Blazored.FluentValidation;
 @using BidHeroApp.InputModels;
 @using Microsoft.AspNetCore.Mvc.Rendering;
+@inject IWebHostEnvironment Environment
+@inject IJSRuntime JSRuntime
 
 @if (Categories != null)
 {
@@ -25,6 +27,12 @@
                         <div class="mb-3">
                             <label for="codeInput" class="form-label">Code</label>
                             <InputText @bind-Value="@Input.Code" class="form-control" placeholder="Please enter code." />
+                        </div>
+                        <div class="mb-3">
+                            <label for="imageInput" class="form-label">
+                                Image Upload
+                                <InputFile @key=@(_inputFileId) OnChange="@LoadImages" accept="@accepts" class="form-control" />
+                            </label>
                         </div>
                         <div class="mb-3">
                             <label for="startDateInput" class="form-label">Start Date</label>
@@ -76,6 +84,13 @@
 
     public ItemInputModel Input { get; set; } = new();
 
+    private List<IBrowserFile> loadedImages = new();
+    private string _inputFileId = Guid.NewGuid().ToString();
+    private string accepts = ".png,.jpg,.jpeg";
+    private long maxFileSize = 1024 * 15;
+    private int maxAllowedFiles = 1;
+    private bool isLoading;
+
     [Parameter]
     public bool IsParentComponentProcessing { get; set; }
 
@@ -96,6 +111,37 @@
     private void OnReset()
     {
         Input = new();
+    }
+
+    private async Task LoadImages(InputFileChangeEventArgs e)
+    {
+        isLoading = true;
+        loadedImages.Clear();
+
+        foreach (IBrowserFile file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            try
+            {
+                string fileExtension = Path.GetExtension(file.Name);
+                if (accepts.Contains(fileExtension))
+                {
+                    loadedImages.Add(file);
+                    Input.Image = file;
+                }
+                else
+                {
+                    _inputFileId = Guid.NewGuid().ToString();
+                    await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", $"File type {fileExtension} is not allowed. Should be in the following ({accepts}).");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
+                _inputFileId = Guid.NewGuid().ToString();
+            }
+        }
+
+        isLoading = false;
     }
 
 }

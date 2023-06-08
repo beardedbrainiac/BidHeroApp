@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using System.ComponentModel.DataAnnotations;
 
 namespace BidHeroApp.InputModels
 {
@@ -6,6 +7,7 @@ namespace BidHeroApp.InputModels
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public IBrowserFile Image { get; set; }
         public bool IsActive { get; set; }
         public string Code { get; set; } = string.Empty;
 

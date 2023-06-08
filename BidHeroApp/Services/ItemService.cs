@@ -12,13 +12,16 @@ namespace BidHeroApp.Services
     public class ItemService : IItemService
     {
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _environment;
         private readonly ApplicationDbContext _context;
 
         public ItemService(
             IMapper mapper,
+            IWebHostEnvironment environment,
             ApplicationDbContext context)
         {
             _mapper = mapper;
+            _environment = environment;
             _context = context;
         }
 
@@ -61,6 +64,20 @@ namespace BidHeroApp.Services
                     Category = category,
                     CreatedByUserId = model.GetUserId()
                 };
+
+                if (model.Image != null)
+                {
+                    long maxFileSize = 1024 * 15;
+                    string fileExtension = Path.GetExtension(model.Image.Name);
+                    string trustedFileNameForFileStorage = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
+                    string webPath = Path.Combine("uploads", "items", $"{trustedFileNameForFileStorage}{fileExtension}");
+                    string path = Path.Combine(_environment.WebRootPath, webPath);
+
+                    itemObject.Image = webPath;
+
+                    await using FileStream fs = new(path, FileMode.Create);
+                    await model.Image.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                }
 
                 var item = await _context.Items.AddAsync(itemObject);
                 await _context.SaveChangesAsync();
@@ -105,6 +122,20 @@ namespace BidHeroApp.Services
                             Category = category,
                             CreatedByUserId = model.GetUserId()
                         };
+
+                        if (model.Image != null)
+                        {
+                            long maxFileSize = 1024 * 15;
+                            string fileExtension = Path.GetExtension(model.Image.Name);
+                            string trustedFileNameForFileStorage = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
+                            string webPath = Path.Combine("uploads", "items", $"{trustedFileNameForFileStorage}{fileExtension}");
+                            string path = Path.Combine(_environment.WebRootPath, webPath);
+
+                            itemObject.Image = webPath;
+
+                            await using FileStream fs = new(path, FileMode.Create);
+                            await model.Image.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                        }
 
                         var item = await _context.Items.AddAsync(itemObject);
                         await _context.SaveChangesAsync();
