@@ -4,6 +4,7 @@
 @using Blazored.FluentValidation;
 @using BidHeroApp.InputModels;
 @using Microsoft.AspNetCore.Mvc.Rendering;
+@using System.Drawing;
 @inject IWebHostEnvironment Environment
 @inject IJSRuntime JSRuntime
 
@@ -88,6 +89,8 @@
     private List<IBrowserFile> loadedImages = new();
     private string _inputFileId = Guid.NewGuid().ToString();
     private string accepts = ".png,.jpg,.jpeg";
+    private int height = 480;
+    private int width = 640;
     private long maxFileSize = 1024 * 15;
     private int maxAllowedFiles = 1;
     private bool isLoading;
@@ -127,8 +130,25 @@
                 string fileExtension = Path.GetExtension(file.Name);
                 if (accepts.Contains(fileExtension))
                 {
-                    loadedImages.Add(file);
-                    Input.Image = file;
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        await file.OpenReadStream().CopyToAsync(memoryStream);
+
+                        using (var image = Image.FromStream(memoryStream))
+                        {
+                            if (((image.Height <= (height + 5)) && (image.Height >= (height - 5))) &&
+                                ((image.Width <= (width + 5)) && (image.Width >= (width - 5))))
+                            {
+                                loadedImages.Add(file);
+                                Input.Image = file;
+                            }
+                            else
+                            {
+                                _inputFileId = Guid.NewGuid().ToString();
+                                await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", $"Image size not allowed. Should be 640px x 480px with tolerance of ±5px.");
+                            }
+                        }
+                    }
                 }
                 else
                 {
