@@ -19,7 +19,8 @@ IF NOT EXISTS (SELECT 1 FROM [dbo].[__EFMigrationsHistory] WHERE [MigrationId] I
         INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230527041624_CreateVwUser', N'7.0.5')
         INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230527043231_CreateSpToggleAdminRole', N'7.0.5')
         INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230602094943_CreateCategory', N'7.0.5')
-    END
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230607095515_CreateItem', N'7.0.5')
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230608091327_UpdateItem', N'7.0.5')
 IF NOT EXISTS (SELECT 1 FROM [dbo].[AspNetRoles] WHERE [Name] IN ('Owner', 'Administrator', 'User'))
     BEGIN
         INSERT [dbo].[AspNetRoles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'3064fc34-ba70-4390-9451-b26260a1614b', N'Owner', N'OWNER', NULL);
