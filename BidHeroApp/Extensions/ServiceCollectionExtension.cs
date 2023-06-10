@@ -8,6 +8,7 @@ using FluentValidation;
 using System;
 using BidHeroApp.InputModels;
 using BidHeroApp.Validators;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace BidHeroApp.Extensions
 {
@@ -52,6 +53,17 @@ namespace BidHeroApp.Extensions
             services.AddScoped<IValidator<CategoryInputModel>, CategoryInputModelValidator>();
             services.AddScoped<IValidator<ItemInputModel>, ItemInputModelValidator>();
             services.AddScoped<IValidator<ItemsInputModel>, ItemsInputModelValidator>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddResponseCompressionOptions(this IServiceCollection services)
+        {
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
 
             return services;
         }

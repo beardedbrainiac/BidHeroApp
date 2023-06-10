@@ -1,6 +1,7 @@
 using BidHeroApp.Areas.Identity;
 using BidHeroApp.Data;
 using BidHeroApp.Extensions;
+using BidHeroApp.Hubs;
 using BidHeroApp.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -28,6 +29,7 @@ builder.Services.InitializeDatabase();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddValidators();
 builder.Services.AddAppServices();
+builder.Services.AddResponseCompressionOptions();
 
 var app = builder.Build();
 
@@ -54,6 +56,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapBlazorHub();
+//Creating an endpoint for the AuctionHub
+app.MapHub<AuctionHub>("/auctionhub");
 app.MapFallbackToPage("/_Host");
 
 app.Run();

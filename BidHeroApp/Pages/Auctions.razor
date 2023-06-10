@@ -5,9 +5,11 @@
 @using BidHeroApp.InputModels;
 @using BidHeroApp.Components.Item;
 @using BidHeroApp.Components;
+@using Microsoft.AspNetCore.SignalR.Client;
 @using System.Security.Claims;
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
 @inject ICategoryService CategoryService
 @inject IAuctionService AuctionService
 @inject IJSRuntime JSRuntime
@@ -62,6 +64,7 @@
     public bool IsLoading { get; set; } = false;
     private IList<AuctionItemViewModel>? items;
     private int _itemId = 0;
+    private HubConnection? hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,6 +76,18 @@
     private async Task LoadListAsync()
     {
         items = await AuctionService.ListAsync(null);
+
+        hubConnection = new HubConnectionBuilder()
+        .WithUrl(Navigation.ToAbsoluteUri("/auctionhub"))
+        .Build();
+
+        hubConnection.On<List<AuctionItemViewModel>>("RefreshAuctions", employees =>
+            {
+                items = employees;
+                InvokeAsync(StateHasChanged);
+            });
+
+        await hubConnection.StartAsync();
     }
 
 }
