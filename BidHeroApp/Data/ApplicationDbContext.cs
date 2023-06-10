@@ -19,6 +19,7 @@ namespace BidHeroApp.Data
 
             // Entities
 
+            builder.ApplyConfiguration(new BidConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new ItemConfiguration());
 
@@ -29,6 +30,7 @@ namespace BidHeroApp.Data
 
         // Entities
 
+        public virtual DbSet<Bid> Bids { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Item> Items { get; set; }
 
