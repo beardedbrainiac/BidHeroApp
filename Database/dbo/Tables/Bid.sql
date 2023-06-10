@@ -17,3 +17,25 @@
     CONSTRAINT [FK_Bid_UpdatedByUser] FOREIGN KEY ([UpdatedByUserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
 );
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Bid_UpdatedByUserId]
+    ON [dbo].[Bid]([UpdatedByUserId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Bid_ItemId]
+    ON [dbo].[Bid]([ItemId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Bid_DeletedByUserId]
+    ON [dbo].[Bid]([DeletedByUserId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Bid_CreatedByUserId]
+    ON [dbo].[Bid]([CreatedByUserId] ASC);
+
