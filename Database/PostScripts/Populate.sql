@@ -23,6 +23,7 @@ IF NOT EXISTS (SELECT 1 FROM [dbo].[__EFMigrationsHistory] WHERE [MigrationId] I
         INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230608091327_UpdateItem', N'7.0.5')
         INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230610053406_CreateBid', N'7.0.5')
         INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230610081841_CreateSpCategoryItems', N'7.0.5')
+        INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20230610143025_UpdateSpCategoryItems', N'7.0.5')
     END
 IF NOT EXISTS (SELECT 1 FROM [dbo].[AspNetRoles] WHERE [Name] IN ('Owner', 'Administrator', 'User'))
     BEGIN

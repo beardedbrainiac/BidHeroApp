@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Threading.Channels;
 using TableDependency.SqlClient;
 using TableDependency.SqlClient.Base.EventArgs;
 
@@ -75,6 +74,7 @@ namespace BidHeroApp.Services
                                     Value = reader.GetValueOrDefault<int>("ItemId", 0).ToString(),
                                     Text = reader.GetValueOrDefault<string>("ItemName", string.Empty)
                                 },
+                                Image = reader.GetValueOrDefault<string>("Image", string.Empty),
                                 Points = reader.GetValueOrDefault<int>("Points", 0)
                             };
 
