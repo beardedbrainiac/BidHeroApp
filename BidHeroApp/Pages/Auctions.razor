@@ -1,4 +1,5 @@
 ﻿@page "/auctions"
+@using BidHeroApp.Components.Category
 @using BidHeroApp.Constants;
 @using BidHeroApp.Services.Contracts;
 @using BidHeroApp.ViewModels;
@@ -20,32 +21,50 @@
 
         <h1>Items</h1>
 
-        @if (items == null)
+        @if (_items == null)
         {
             <p><em>Loading...</em></p>
         }
         else
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Points</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in items)
-                    {
-                        <tr>
-                            <td>@item.Item.Text</td>
-                            <td>@item.Points</td>
-                            <td>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2">
+                        <ListGroup Categories="_categories" SelectCategory="SelectCategory"></ListGroup>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Points</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (_items != null && _items.Any())
+                                {
+                                    @foreach (var item in _items)
+                                    {
+                                        <tr>
+                                            <td>@item.Item.Text</td>
+                                            <td>@item.Points</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3">No items</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         }
     </Authorized>
     <NotAuthorized>
@@ -62,7 +81,9 @@
 
 @code {
     public bool IsLoading { get; set; } = false;
-    private IList<AuctionItemViewModel>? items;
+    private IList<SelectListItem>? _categories;
+    private IList<AuctionItemViewModel>? _items;
+    private int _categoryId = 0;
     private int _itemId = 0;
     private HubConnection? hubConnection;
 
@@ -70,24 +91,31 @@
     {
         IsLoading = true;
         await LoadListAsync();
+        _categories = await CategoryService.AsSelectListAsync();
         IsLoading = false;
     }
 
     private async Task LoadListAsync()
     {
-        items = await AuctionService.ListAsync(null);
+        _items = await AuctionService.ListAsync(null);
 
         hubConnection = new HubConnectionBuilder()
         .WithUrl(Navigation.ToAbsoluteUri("/auctionhub"))
         .Build();
 
-        hubConnection.On<List<AuctionItemViewModel>>("RefreshAuctions", employees =>
+        hubConnection.On<List<AuctionItemViewModel>>("RefreshAuctions", items =>
             {
-                items = employees;
+                _items = items;
                 InvokeAsync(StateHasChanged);
             });
 
         await hubConnection.StartAsync();
+    }
+
+    public async Task SelectCategory(string categoryId)
+    {
+        _categoryId = int.Parse(categoryId);
+        _items = await AuctionService.ListAsync(_categoryId);
     }
 
 }

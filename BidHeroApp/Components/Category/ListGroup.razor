@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering;
+
+@if (Categories != null)
+{
+    <div class="list-group">
+        @foreach(var category in Categories)
+        {
+            if (!string.IsNullOrWhiteSpace(_categoryId) && _categoryId == category.Value)
+            {
+                <button type="button" class="list-group-item list-group-item-action active" aria-current="true" @onclick="()=>OnClick(category.Value)">
+                    @category.Text
+                </button>
+            }
+            else
+            {
+                <button type="button" class="list-group-item list-group-item-action" @onclick="()=>OnClick(category.Value)">
+                    @category.Text
+                </button>
+            }
+        }
+    </div>
+}
+
+@code
+{
+    [Parameter]
+    public IList<SelectListItem> Categories { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SelectCategory { get; set; }
+
+    private string _categoryId = string.Empty;
+
+    private async Task OnClick(string categoryId)
+    {
+        _categoryId = categoryId;
+        await SelectCategory.InvokeAsync(_categoryId);
+    }
+
+}
