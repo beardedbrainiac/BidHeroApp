@@ -1,0 +1,78 @@
+﻿@page "/auctions"
+@using BidHeroApp.Constants;
+@using BidHeroApp.Services.Contracts;
+@using BidHeroApp.ViewModels;
+@using BidHeroApp.InputModels;
+@using BidHeroApp.Components.Item;
+@using BidHeroApp.Components;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ICategoryService CategoryService
+@inject IAuctionService AuctionService
+@inject IJSRuntime JSRuntime
+
+<AuthorizeView Roles="@Role.User" Context="innerContext">
+    <Authorized>
+        <PageTitle>Items</PageTitle>
+
+        <h1>Items</h1>
+
+        @if (items == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Points</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.Item.Text</td>
+                            <td>@item.Points</td>
+                            <td>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <AuthorizeView>
+            <Authorized>
+                <Forbidden></Forbidden>
+            </Authorized>
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeView>        
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    public bool IsLoading { get; set; } = false;
+    private IList<AuctionItemViewModel>? items;
+    private int _itemId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        await LoadListAsync();
+        IsLoading = false;
+    }
+
+    private async Task LoadListAsync()
+    {
+        items = await AuctionService.ListAsync(null);
+    }
+
+}

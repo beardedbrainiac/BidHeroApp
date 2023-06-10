@@ -76,6 +76,7 @@
     <Build Include="dbo\Tables\Category.sql" />
     <Build Include="dbo\Tables\Item.sql" />
     <Build Include="dbo\Tables\Bid.sql" />
+    <Build Include="dbo\Stored Procedures\spCategoryItems.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="PostScripts\Populate.sql" />
