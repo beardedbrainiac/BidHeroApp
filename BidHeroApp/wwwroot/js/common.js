@@ -92,3 +92,13 @@ function HideUpdateItemModal() {
 
     toastr.success('Successful updating item!');
 }
+
+function ShowAddBidModal() {
+    $('#addBid').modal('show');
+}
+
+function HideAddBidModal() {
+    $('#addBid').modal('hide');
+
+    toastr.success('Successful placing bid!');
+}

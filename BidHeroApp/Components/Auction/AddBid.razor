@@ -1,0 +1,81 @@
+﻿@using BidHeroApp.ViewModels;
+@using Blazored.FluentValidation;
+@using BidHeroApp.InputModels;
+@inject IJSRuntime JSRuntime
+
+<!-- Modal -->
+<div class="modal fade" id="addBid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addBidLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBidLabel">Add Bid</h5>
+                <button id="addBidClose" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="()=>OnReset()"></button>
+            </div>
+            <EditForm Model="@Input" OnSubmit="@OnSave">
+                <div class="modal-body">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    <ValidationSummary />
+
+                    <input type="hidden" id="itemIdInput" class="form-control" @bind="Input.ItemId">
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">Points</label>
+                        <InputNumber @bind-Value="@Input.Points" class="form-control" placeholder="Please place your bid." />
+                    </div>
+                </div>
+                @if (IsParentComponentProcessing)
+                {
+                    <div class="modal-footer">
+                        <button type="button" disabled class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" disabled class="btn btn-primary">Processing</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="()=>OnReset()">Close</button>
+                        <button type="button" class="btn btn-primary" @onclick="()=>OnSave()">Save</button>
+                    </div>
+                }
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private FluentValidationValidator? _fluentValidationValidator;
+
+    public BidInputModel Input { get; set; } = new();
+
+    [Parameter]
+    public bool IsParentComponentProcessing { get; set; }
+
+    [Parameter]
+    public AuctionItemViewModel Item { get; set; }
+
+    [Parameter]
+    public EventCallback<BidInputModel> Callback { get; set; }
+
+    private async Task OnSave()
+    {
+        if (await _fluentValidationValidator!.ValidateAsync())
+        {
+            Input.ItemId = int.Parse(Item.Item.Value);
+
+            if (Input.Points > Item.Points)
+            {
+                await Callback.InvokeAsync(Input);
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", $"Please place a bid higher than {Item.Points} points.");
+            }
+        }
+    }
+
+    private void OnReset()
+    {
+        Input = new();
+    }
+
+}

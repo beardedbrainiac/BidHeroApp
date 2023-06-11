@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BidHeroApp.Data;
+using BidHeroApp.Exceptions;
 using BidHeroApp.Extensions;
 using BidHeroApp.Hubs;
+using BidHeroApp.InputModels;
 using BidHeroApp.Models;
 using BidHeroApp.Services.Contracts;
 using BidHeroApp.ViewModels;
@@ -94,5 +96,40 @@ namespace BidHeroApp.Services
                 throw;
             }
         }
+
+        public async Task AddBidAsync(BidInputModel model)
+        {
+            try
+            {
+                //int itemId = model.ItemId;
+
+                //var item = await _dbContext.Items.Where(x => x.Id == itemId).FirstOrDefaultAsync();
+                //if (item == null)
+                //{
+                //    throw new NotFoundException($"Item ID {itemId} not found!");
+                //}
+
+                //var bidObject = new Bid()
+                //{
+                //    Points = model.Points,
+                //    IsActive = true,
+                //    IsDeleted = false,
+                //    ItemId = item.Id,
+                //    Item = item,
+                //    CreatedDate = DateTimeOffset.Now,
+                //    CreatedByUserId = model.GetUserId()
+                //};
+
+                //var bid = await _dbContext.Bids.AddAsync(bidObject);
+                //await _dbContext.SaveChangesAsync();
+
+                await _dbContext.Database.ExecuteSqlInterpolatedAsync($"spPlaceBid @UserId={model.GetUserId()}, @ItemId={model.ItemId}, @Points={model.Points}");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿@page "/auctions"
-@using BidHeroApp.Components.Category
+@using BidHeroApp.Components.Auction;
+@using BidHeroApp.Components.Category;
 @using BidHeroApp.Constants;
 @using BidHeroApp.Services.Contracts;
 @using BidHeroApp.ViewModels;
@@ -27,6 +28,8 @@
         }
         else
         {
+            <AddBid IsParentComponentProcessing="IsLoading" Item="_item" Callback="AddBid_Click"></AddBid>
+
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-2">
@@ -45,7 +48,7 @@
                                                 <div class="card-body">
                                                     <h5 class="card-title">@item.Item.Text</h5>
                                                     <p class="card-text">@item.Points</p>
-                                                    <button type="button" class="btn btn-primary">Place Bid</button>
+                                                    <button type="button" class="btn btn-primary" @onclick="()=>AddBid(item)">Place Bid</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,10 +75,12 @@
 
 @code {
     public bool IsLoading { get; set; } = false;
+    public BidInputModel Input { get; set; } = new();
     private IList<SelectListItem>? _categories;
     private IList<AuctionItemViewModel>? _items;
     private int _categoryId = 0;
     private int _itemId = 0;
+    private AuctionItemViewModel? _item;
     private HubConnection? _hubConnection;
 
     protected override async Task OnInitializedAsync()
@@ -107,6 +112,38 @@
     {
         _categoryId = int.Parse(categoryId);
         _items = await AuctionService.ListAsync(_categoryId);
+    }
+
+    private void AddBid(AuctionItemViewModel item)
+    {
+        _item = item;
+        Input = new BidInputModel();
+        JSRuntime.InvokeVoidAsync("ShowAddBidModal");
+    }
+
+    public async Task AddBid_Click(BidInputModel addModel)
+    {
+        IsLoading = true;
+        try
+        {
+            if (addModel != null)
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                addModel.SetUserId(userId);
+
+                await AuctionService.AddBidAsync(addModel);
+                await LoadListAsync();
+                await JSRuntime.InvokeVoidAsync("HideAddBidModal");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("DisplayErrorMessage", ex.Message);
+        }
+        IsLoading = false;
     }
 
 }
